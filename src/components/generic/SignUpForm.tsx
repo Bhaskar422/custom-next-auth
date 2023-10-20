@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SignUpSchema, TSignUpSchema } from "@/lib/validTypes";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -47,7 +48,7 @@ const SignUpForm = () => {
     if (response.ok) {
       router.push("/sign-in");
     } else {
-      console.log("Registration Failed");
+      toast.error("Registration Failed");
     }
   };
 

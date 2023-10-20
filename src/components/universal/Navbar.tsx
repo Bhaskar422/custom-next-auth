@@ -3,8 +3,12 @@ import React from "react";
 import { ModeToggle } from "@/components/universal/ToggleTheme";
 import { buttonVariants } from "@/components/ui/button";
 import MaxWidthWrapper from "@/components/universal/MaxWidthWrapper";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import UserAccountNav from "@/components/universal/UserAccountNav";
 
-const Navbar = () => {
+const Navbar = async () => {
+  const session = await getServerSession(authOptions);
   return (
     <header className="sticky h-14 top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <MaxWidthWrapper>
@@ -15,12 +19,23 @@ const Navbar = () => {
           {/* Implement Mobile Nav bar*/}
 
           <div className="hidden items-center space-x-4 sm:flex">
-            <Link href="/" className={buttonVariants({ variant: "ghost", size: "sm" })}>
-              Dashboard
-            </Link>
-            <Link href="/sign-in" className={buttonVariants({ size: "sm" })}>
-              Sign in
-            </Link>
+            {session?.user ? (
+              <>
+                <UserAccountNav />
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/sign-in"
+                  className={buttonVariants({ variant: "ghost", size: "sm" })}
+                >
+                  Sign in
+                </Link>
+                <Link href="/sign-up" className={buttonVariants({ size: "sm" })}>
+                  Get Started
+                </Link>
+              </>
+            )}
             <ModeToggle />
           </div>
         </nav>

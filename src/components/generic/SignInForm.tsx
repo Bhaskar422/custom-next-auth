@@ -18,6 +18,7 @@ import Link from "next/link";
 import { SignInSchema, TSignInSchema } from "@/lib/validTypes";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const SignInForm = () => {
   const router = useRouter();
@@ -36,8 +37,10 @@ const SignInForm = () => {
       redirect: false,
     });
     if (signInData?.error) {
-      console.log(signInData.error);
+      // console.log(signInData.error);
+      toast.error("Something went wrong!!");
     } else {
+      router.refresh();
       router.push("/admin");
     }
   };
