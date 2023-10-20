@@ -16,15 +16,39 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SignUpSchema, TSignUpSchema } from "@/lib/validTypes";
+import { useRouter } from "next/navigation";
 
 const SignUpForm = () => {
+  const router = useRouter();
+
   const form = useForm<TSignUpSchema>({
     resolver: zodResolver(SignUpSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
-  const onSubmit = (values: TSignUpSchema) => {
-    console.log("form submitted");
-    console.log(values);
+  const onSubmit = async (values: TSignUpSchema) => {
+    const response = await fetch("/api/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      }),
+    });
+
+    if (response.ok) {
+      router.push("/sign-in");
+    } else {
+      console.log("Registration Failed");
+    }
   };
 
   return (

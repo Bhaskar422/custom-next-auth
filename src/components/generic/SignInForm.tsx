@@ -16,15 +16,30 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SignInSchema, TSignInSchema } from "@/lib/validTypes";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const SignInForm = () => {
+  const router = useRouter();
   const form = useForm<TSignInSchema>({
     resolver: zodResolver(SignInSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
   });
 
-  const onSubmit = (values: TSignInSchema) => {
-    console.log("form submitted");
-    console.log(values);
+  const onSubmit = async (values: TSignInSchema) => {
+    const signInData = await signIn("credentials", {
+      email: values.email,
+      password: values.password,
+      redirect: false,
+    });
+    if (signInData?.error) {
+      console.log(signInData.error);
+    } else {
+      router.push("/admin");
+    }
   };
 
   return (
