@@ -18,6 +18,8 @@ import Link from "next/link";
 import { SignUpSchema, TSignUpSchema } from "@/lib/validTypes";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import GoogleSignIn from "@/components/generic/GoogleSignIn";
+import GithubSignIn from "@/components/generic/GithubSignIn";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -113,6 +115,10 @@ const SignUpForm = () => {
       </form>
       <div className="mx-auto my-4 flex w-full items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-stone-400 after:ml-4 after:block after:h-px after:flex-grow after:bg-stone-400">
         or
+      </div>
+      <div className="w-full space-y-4">
+        <GoogleSignIn>Sign up with Google</GoogleSignIn>
+        <GithubSignIn>Sign up with Github</GithubSignIn>
       </div>
       <p className="text-center text-sm text-gray-500 mt-2">
         If you have an account already, please&nbsp;

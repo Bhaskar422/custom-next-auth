@@ -1,6 +1,8 @@
 import { db } from "@/server/db/client";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { compare } from "bcrypt";
+import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from "next-auth/providers/github";
 import Credentials from "next-auth/providers/credentials";
 import type { NextAuthOptions } from "next-auth";
 
@@ -11,10 +13,14 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   providers: [
-    // GithubProvider({
-    //   clientId: process.env.GITHUB_ID!,
-    //   clientSecret: process.env.GITHUB_SECRET!,
-    // }),
+    GithubProvider({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    }),
     Credentials({
       id: "credentials",
       name: "Credentials",
@@ -35,9 +41,14 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const passwordMatch = await compare(credentials.password, existingUser.password);
-        if (!passwordMatch) {
-          return null;
+        if (existingUser.password) {
+          const passwordMatch = await compare(
+            credentials.password,
+            existingUser.password
+          );
+          if (!passwordMatch) {
+            return null;
+          }
         }
 
         return {
